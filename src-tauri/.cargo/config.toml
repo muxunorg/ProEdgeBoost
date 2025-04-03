@@ -1,0 +1,15 @@
+[source]
+# 默认使用阿里云镜像
+crates-io = { replace-with = "aliyun" } # 指定使用下面哪个源，修改为source.后面的内容即可
+
+# 阿里云镜像 (推荐)
+[source.aliyun]
+registry = "sparse+https://mirrors.aliyun.com/crates.io-index/"
+
+# 清华大学镜像 (备用)
+[source.tuna]
+registry = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"
+
+[net]
+git-fetch-with-cli = true  # 提升 git 依赖下载速度
+retry = 5                  # 网络错误重试次数

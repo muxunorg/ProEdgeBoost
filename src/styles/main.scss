@@ -1,0 +1,128 @@
+// 定义一些颜色变量以供复用
+$primary-color: #0f0f0f;
+$background-color-light: #f6f6f6;
+$background-color-dark: #2f2f2f;
+$hover-color-light: #535bf2;
+$hover-color-dark: #24c8db;
+$button-active-bg-dark: #0f0f0f69;
+
+// 根元素样式
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: $primary-color;
+  background-color: $background-color-light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+// scoped 样式块
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: 0.75s;
+
+  &.vite:hover {
+    filter: drop-shadow(0 0 2em #747bff);
+  }
+
+  &.vue:hover {
+    filter: drop-shadow(0 0 2em #249b73);
+  }
+
+  &.tauri:hover {
+    filter: drop-shadow(0 0 2em #24c8db);
+  }
+}
+
+// 全局样式块
+.container {
+  margin: 0;
+  padding-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+
+  &:hover {
+    color: $hover-color-light;
+  }
+}
+
+h1 {
+  text-align: center;
+}
+
+input,
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  color: $primary-color;
+  background-color: #ffffff;
+  transition: border-color 0.25s;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+button {
+  cursor: pointer;
+
+  &:hover {
+    border-color: #396cd8;
+  }
+
+  &:active {
+    border-color: #396cd8;
+    background-color: #e8e8e8;
+  }
+}
+
+#greet-input {
+  margin-right: 5px;
+}
+
+// 媒体查询：暗色模式
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: $background-color-light;
+    background-color: $background-color-dark;
+  }
+
+  a:hover {
+    color: $hover-color-dark;
+  }
+
+  input,
+  button {
+    color: #ffffff;
+    background-color: rgba($background-color-dark, 0.6);
+  }
+
+  button:active {
+    background-color: $button-active-bg-dark;
+  }
+}
