@@ -12,9 +12,13 @@
   "app": {
     "windows": [
       {
-        "title": "proedgeboost",
-        "width": 800,
-        "height": 600
+        "title": "慕讯公益加速器",
+        "decorations": false,
+        "transparent": true,
+        "resizable": false,
+        "width": 1,
+        "height": 1,
+        "visible": false
       }
     ],
     "security": {
