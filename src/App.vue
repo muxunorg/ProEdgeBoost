@@ -63,7 +63,7 @@
         <el-icon><setting /></el-icon>
         <template #title>主机加速</template>
       </el-menu-item>
-      <el-menu-item index="4" class="B">
+      <el-menu-item index="5" class="B">
         <el-icon><CaretLeft v-if="isCollapse" /><CaretRight v-else /></el-icon>
         <template #title>{{ isCollapse ? '折叠' : '展开' }}</template>
       </el-menu-item>
