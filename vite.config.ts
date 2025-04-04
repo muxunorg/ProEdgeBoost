@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
@@ -20,6 +21,7 @@ export default defineConfig(async () => ({
                 }
             ],
             dts: "types/auto-imports.d.ts",
+            resolvers: [ElementPlusResolver()],
             eslintrc: {
                 enabled: true
             }
@@ -27,6 +29,7 @@ export default defineConfig(async () => ({
         Components({
             dirs: ["src/components/ui"],
             extensions: ["vue"],
+            resolvers: [ElementPlusResolver()],
             dts: "types/components.d.ts"
         })
     ],

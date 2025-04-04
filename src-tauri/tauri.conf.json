@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "proedgeboost",
+  "productName": "muxunacct",
   "version": "0.1.0",
-  "identifier": "com.proedgeboost.app",
+  "identifier": "com.muxunacc.app",
   "build": {
     "beforeDevCommand": "yarn dev",
     "devUrl": "http://localhost:1420",
@@ -13,12 +13,9 @@
     "windows": [
       {
         "title": "慕讯公益加速器",
-        "decorations": false,
-        "transparent": true,
-        "resizable": false,
-        "width": 1,
-        "height": 1,
-        "visible": false
+        "resizable": true,
+        "width": 800,
+        "height": 600
       }
     ],
     "security": {
