@@ -14,12 +14,13 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@douyinfe/semi-ui": "^2.77.1",
     "@element-plus/icons-vue": "^2.3.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "@vueuse/core": "^12.5.0",
     "element-plus": "^2.9.7",
-    "element-ui": "^2.15.14",
+    "unplugin-icons": "^22.1.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {

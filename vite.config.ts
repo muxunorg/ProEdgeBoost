@@ -1,9 +1,11 @@
 // vite.config.ts
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import { ElementPlusResolver, SemiUIResolver} from 'unplugin-vue-components/resolvers'
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
@@ -21,7 +23,8 @@ export default defineConfig(async () => ({
                 }
             ],
             dts: "types/auto-imports.d.ts",
-            resolvers: [ElementPlusResolver()],
+            resolvers: [
+                SemiUIResolver(), ElementPlusResolver(), IconsResolver({ prefix: 'Icon', }),],
             eslintrc: {
                 enabled: true
             }
@@ -29,8 +32,11 @@ export default defineConfig(async () => ({
         Components({
             dirs: ["src/components/ui"],
             extensions: ["vue"],
-            resolvers: [ElementPlusResolver()],
+            resolvers: [IconsResolver({ enabledCollections: ['ep'], }),ElementPlusResolver()],
             dts: "types/components.d.ts"
+        }),
+        Icons({
+            autoInstall: true,
         })
     ],
 

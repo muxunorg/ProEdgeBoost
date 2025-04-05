@@ -5,8 +5,17 @@
     Menu as IconMenu,
     Setting,
     CaretLeft,
-    CaretRight
+    CaretRight, Close, FullScreen, BottomLeft
   } from '@element-plus/icons-vue'
+  import { invoke } from "@tauri-apps/api/core";
+
+  const greetMsg = ref("");
+  const name = ref("");
+
+  async function greet() {
+    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+    greetMsg.value = await invoke("greet", { name: name.value });
+  }
 
   // 侧边栏状态管理（网页3）
   const isCollapse = ref(localStorage.getItem('sidebarCollapsed') === 'true')
@@ -29,48 +38,90 @@
 </script>
 
 <template>
-  <div class="layout-container">
-    <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      :collapse="isCollapse || windowWidth < 768"
-      @mouseenter.native="handleCollapse(false)"
-      @mouseleave.native="handleCollapse(true)"
-    >
-      <el-menu-item index="1" class="A" disabled>
-        <el-icon><icon-menu /></el-icon>
-        <template #title>慕讯公益加速器</template>
-      </el-menu-item>
-      <el-menu-item index="1" class="A" disabled>
-        <template #title>永久免费 不玩套路</template>
-      </el-menu-item>
-      <el-menu-item index="1" class="A" disabled>
-        <el-icon><document /></el-icon>
-        <template #title>当前版本</template>
-      </el-menu-item>
-      <!-- 菜单项 -->
-      <el-menu-item index="2" class="B">
-        <el-icon><icon-menu /></el-icon>
-        <template #title>我的游戏</template>
-      </el-menu-item>
+    <div class="common-layout">
+      <el-container>
+        <el-aside width="200px">
+          <div class="layout-container">
+            <el-menu
+              default-active="2"
+              class="el-menu-vertical-demo"
+              :collapse="isCollapse || windowWidth < 768"
+              @mouseenter.native="handleCollapse(false)"
+              @mouseleave.native="handleCollapse(true)"
+            >
+              <el-menu-item index="1" class="A" disabled>
+                <el-icon><icon-menu /></el-icon>
+                <template #title>慕讯公益加速器</template>
+              </el-menu-item>
+              <el-menu-item index="1" class="A" disabled>
+                <template #title>永久免费 不玩套路</template>
+              </el-menu-item>
+              <el-menu-item index="1" class="A" disabled>
+                <el-icon><document /></el-icon>
+                <template #title>当前版本</template>
+              </el-menu-item>
+              <!-- 菜单项 -->
+              <el-menu-item index="2" class="B">
+                <el-icon><icon-menu /></el-icon>
+                <template #title>我的游戏</template>
+              </el-menu-item>
 
-      <el-menu-item index="3" class="B">
-        <el-icon><document /></el-icon>
-        <template #title>游戏库</template>
-      </el-menu-item>
+              <el-menu-item index="3" class="B">
+                <el-icon><document /></el-icon>
+                <template #title>游戏库</template>
+              </el-menu-item>
 
-      <el-menu-item index="4" class="B">
-        <el-icon><setting /></el-icon>
-        <template #title>主机加速</template>
-      </el-menu-item>
-      <el-menu-item index="5" class="B">
-        <el-icon><CaretLeft v-if="isCollapse" /><CaretRight v-else /></el-icon>
-        <template #title>{{ isCollapse ? '折叠' : '展开' }}</template>
-      </el-menu-item>
+              <el-menu-item index="4" class="B">
+                <el-icon><setting /></el-icon>
+                <template #title>主机加速</template>
+              </el-menu-item>
+              <el-menu-item index="5" class="B">
+                <el-icon><CaretLeft v-if="isCollapse" /><CaretRight v-else /></el-icon>
+                <template #title>{{ isCollapse ? '折叠' : '展开' }}</template>
+              </el-menu-item>
 
-    </el-menu>
+            </el-menu>
 
-  </div>
+          </div>
+        </el-aside>
+        <el-container>
+          <el-header style="text-align: right; font-size: 12px">
+            <div class="toolbar">
+              <el-button type="primary" :icon="BottomLeft" circle />
+              <el-button type="primary" :icon="BottomLeft" circle />
+              <el-button type="primary" :icon="BottomLeft" circle />
+              <el-button type="primary" :icon="BottomLeft" circle />
+              <el-button type="primary" :icon="FullScreen" circle />
+              <el-button type="primary" :icon="Close" circle />
+            </div>
+          </el-header>
+          <el-main>
+            <main class="container">
+              <h1>Welcome to Tauri + Vue</h1>
+
+              <div class="row">
+                <a href="https://vitejs.dev" target="_blank">
+                  <img src="/vite.svg" class="logo vite" alt="Vite logo" />
+                </a>
+                <a href="https://tauri.app" target="_blank">
+                  <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
+                </a>
+                <a href="https://vuejs.org/" target="_blank">
+                  <img src="../src/assets/icons/vue.svg" class="logo vue" alt="Vue logo" />
+                </a>
+              </div>
+              <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
+
+              <form class="row" @submit.prevent="greet">
+                <input id="greet-input" v-model="name" placeholder="Enter a name..." />
+                <button type="submit">Greet</button>
+              </form>
+              <p>{{ greetMsg }}</p>
+            </main>
+          </el-main>
+        </el-container>
+      </el-container>
+    </div>
 </template>
 <style scoped>
   /* src/styles/element.scss */
@@ -108,4 +159,11 @@
     --menu-width: 200px;
   }
 
+</style>
+<style lang="scss">
+  @use "@/styles/main.scss" as *;
+  .example {
+    // 使用 main.scss 中定义的变量或样式
+    color: $primary-color;
+  }
 </style>
