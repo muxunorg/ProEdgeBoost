@@ -18,19 +18,22 @@
               <template #title>永久免费 不玩套路</template>
             </el-menu-item>
             <el-menu-item index="1" class="A" disabled>
-              <el-icon><document /></el-icon>
               <template #title>当前版本</template>
+            </el-menu-item>
+            <el-menu-item index="1" class="A" disabled>
+              <template #title></template>
+            </el-menu-item>
+            <el-menu-item index="1" class="A" disabled>
+              <template #title></template>
             </el-menu-item>
             <el-menu-item index="2" class="B">
               <el-icon><icon-menu /></el-icon>
               <template #title>我的游戏</template>
             </el-menu-item>
-
             <el-menu-item index="3" class="B">
               <el-icon><document /></el-icon>
               <template #title>游戏库</template>
             </el-menu-item>
-
             <el-menu-item index="4" class="B">
               <el-icon><setting /></el-icon>
               <template #title>主机加速</template>
@@ -44,7 +47,7 @@
             <el-input
               v-model="input2"
               style="width: 240px"
-              placeholder="Please Input"
+              placeholder="搜索游戏"
               :suffix-icon="Search"
             />
             <el-button :icon="UserFilled" />
@@ -243,7 +246,7 @@
     border: none;
     border-radius: 0;
     overflow: hidden;
-    background-color: #fff; /* 建议替换为你的应用主体背景色 */
+    background-color: #fff;
   }
 
   .common-layout {
@@ -253,5 +256,52 @@
     height: 100vh;
   }
 
-  /* 你可能需要在这里添加或调整其他全局样式，以确保与你的应用风格一致 */
+  /* 禁止选择，但保留鼠标默认样式 */
+  * {
+    user-select: none;
+    cursor: default; /* 设置默认鼠标样式 */
+  }
+
+  /* 允许交互元素的选择和鼠标样式 */
+  input,
+  textarea,
+  button,
+  a,
+  .el-button,
+  .el-input,
+  .el-menu-item {
+    user-select: auto;
+    cursor: auto; /* 恢复默认鼠标样式 */
+  }
+
+  /* 针对 data-tauri-drag-region 内部的元素，保持默认鼠标样式 */
+  [data-tauri-drag-region] button,
+  [data-tauri-drag-region] a,
+  [data-tauri-drag-region] .el-menu-item,
+  [data-tauri-drag-region] .el-input,
+  [data-tauri-drag-region] .el-button,
+  [data-tauri-drag-region] .el-button-group {
+    cursor: default;
+  }
+
+  /* 针对 el-header 内部的元素，保持默认鼠标样式 */
+  .el-header button,
+  .el-header a,
+  .el-header .el-menu-item,
+  .el-header .el-input,
+  .el-header .el-button,
+  .el-header .el-button-group {
+    cursor: default;
+  }
+
+  /* 针对 el-aside 内部的元素，保持默认鼠标样式 */
+  .el-aside button,
+  .el-aside a,
+  .el-aside .el-menu-item,
+  .el-aside .el-input,
+  .el-aside .el-button,
+  .el-aside .el-button-group {
+    cursor: default;
+  }
+
 </style>
