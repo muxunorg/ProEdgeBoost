@@ -3,9 +3,7 @@
   import {
     Document,
     Menu as IconMenu,
-    Setting,
-    CaretLeft,
-    CaretRight, Close, FullScreen, BottomLeft
+    Setting, CaretLeft, CaretRight, Close, FullScreen, Minus, Headset, PictureFilled, UserFilled, Bell, Search
   } from '@element-plus/icons-vue'
   import { invoke } from "@tauri-apps/api/core";
 
@@ -87,17 +85,29 @@
         <el-container>
           <el-header style="text-align: right; font-size: 12px">
             <div class="toolbar">
-              <el-button type="primary" :icon="BottomLeft" circle />
-              <el-button type="primary" :icon="BottomLeft" circle />
-              <el-button type="primary" :icon="BottomLeft" circle />
-              <el-button type="primary" :icon="BottomLeft" circle />
-              <el-button type="primary" :icon="FullScreen" circle />
-              <el-button type="primary" :icon="Close" circle />
+              <el-input
+                v-model="input2"
+                style="width: 240px"
+                placeholder="Please Input"
+                :suffix-icon="Search"
+              />
+              <el-button :icon="UserFilled" />
+              <el-button-group>
+                <el-button :icon="Bell" />
+                <el-button :icon="Headset" />
+                <el-button :icon="PictureFilled" />
+                <el-button :icon="Setting" />
+              </el-button-group>
+              <el-button-group>
+                <el-button :icon="Minus" />
+                <el-button :icon="FullScreen" />
+                <el-button :icon="Close" />
+              </el-button-group>
             </div>
           </el-header>
           <el-main>
             <main class="container">
-              <h1>Welcome to Tauri + Vue</h1>
+              <h1>慕讯公益加速器</h1>
 
               <div class="row">
                 <a href="https://vitejs.dev" target="_blank">
