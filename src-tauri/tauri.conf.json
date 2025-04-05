@@ -15,7 +15,7 @@
         "title": "慕讯公益加速器",
         "resizable": false,
         "decorations": false,
-        "transparent": false,
+        "transparent": true,
         "width": 1056,
         "height": 594
       }

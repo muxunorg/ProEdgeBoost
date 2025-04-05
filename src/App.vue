@@ -1,8 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <!-- 在这里添加 data-tauri-drag-region -->
-      <el-aside width="200px" data-tauri-drag-region>
+      <el-aside :class="{'is-collapse': isCollapse}">
         <div class="layout-container">
           <el-menu
             default-active="2"
@@ -11,7 +10,6 @@
             @mouseenter.native="handleCollapse(false)"
             @mouseleave.native="handleCollapse(true)"
           >
-            <!-- 菜单项... -->
             <el-menu-item index="1" class="A" disabled>
               <el-icon><icon-menu /></el-icon>
               <template #title>慕讯公益加速器</template>
@@ -23,7 +21,6 @@
               <el-icon><document /></el-icon>
               <template #title>当前版本</template>
             </el-menu-item>
-            <!-- 菜单项 -->
             <el-menu-item index="2" class="B">
               <el-icon><icon-menu /></el-icon>
               <template #title>我的游戏</template>
@@ -38,18 +35,12 @@
               <el-icon><setting /></el-icon>
               <template #title>主机加速</template>
             </el-menu-item>
-            <el-menu-item index="5" class="B">
-              <el-icon><CaretLeft v-if="isCollapse" /><CaretRight v-else /></el-icon>
-              <template #title>{{ isCollapse ? '折叠' : '展开' }}</template>
-            </el-menu-item>
           </el-menu>
         </div>
       </el-aside>
       <el-container>
-        <!-- 在这里添加 data-tauri-drag-region -->
-        <el-header style="text-align: right; font-size: 12px" data-tauri-drag-region>
-          <div class="toolbar">
-            <!-- 输入框和按钮... -->
+        <el-header style="text-align: right; font-size: 12px; user-select: none;">
+          <div class="toolbar" data-tauri-drag-region>
             <el-input
               v-model="input2"
               style="width: 240px"
@@ -71,7 +62,6 @@
           </div>
         </el-header>
         <el-main>
-          <!-- 主要内容... -->
           <main class="container">
             <h1>慕讯公益加速器</h1>
 
@@ -100,13 +90,12 @@
   </div>
 </template>
 
-<!-- <script setup> 和 <style> 部分保持不变 -->
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
   import {
     Document,
     Menu as IconMenu,
-    Setting, CaretLeft, CaretRight, Close, FullScreen, Minus, Headset, PictureFilled, UserFilled, Bell, Search
+    Setting, Close, FullScreen, Minus, Headset, PictureFilled, UserFilled, Bell, Search
   } from '@element-plus/icons-vue'
   import { invoke } from "@tauri-apps/api/core";
   import { Window } from '@tauri-apps/api/window';
@@ -166,44 +155,27 @@
 <style scoped>
   /* 之前的样式... */
   html, body, #app, .common-layout, .el-container {
-    height: 97vh; /* 确保容器占满视口高度 */
+    height: 100vh; /* 确保容器占满视口高度 */
     overflow: hidden; /* 防止出现滚动条 */
+  }
+
+  .el-container {
+    display: flex; /* 使用 flex 布局使 aside 和主内容并排 */
   }
 
   .el-aside {
     background-color: #f0f2f5; /* 示例背景色 */
-    /* 可选：添加 grab 光标给用户视觉提示 */
-    cursor: grab;
-  }
-  .el-aside:active {
-    cursor: grabbing;
+    flex-shrink: 0; /* 防止侧边栏在空间不足时被压缩 */
+    transition: width 0.3s ease-in-out; /* 添加宽度变化的过渡效果 */
+    width: 64px; /* 默认折叠宽度 */
   }
 
-  .el-header {
-    background-color: #e9eef3; /* 示例背景色 */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    /* 可选：添加 grab 光标给用户视觉提示 */
-    cursor: grab;
+  /* 控制侧边栏宽度，根据 isCollapse 类 */
+  .el-aside:not(.is-collapse) {
+    width: 200px;
   }
-  .el-header:active {
-    cursor: grabbing;
-  }
-
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    justify-content: flex-end;
-  }
-
-  .layout-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  .el-aside.is-collapse {
+    width: 64px;
   }
 
   .el-menu-vertical-demo {
@@ -219,12 +191,41 @@
     width: 200px;
   }
 
-  .el-main {
-    padding: 20px;
-    overflow-y: auto; /* 如果主内容可能超出，允许滚动 */
+  .el-header {
+    background-color: #e9eef3; /* 示例背景色 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    cursor: grab;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .el-header:active {
+    cursor: grabbing;
   }
 
-  /* 确保拖动区域内的交互元素（按钮、输入框等）仍然是默认光标，可以正常点击 */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: flex-end;
+    height: 100%; /* 保持这一行 */
+  }
+
+  .layout-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .el-main {
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1; /* 让主内容区域占据剩余空间 */
+  }
+
   [data-tauri-drag-region] input,
   [data-tauri-drag-region] button,
   [data-tauri-drag-region] a,
@@ -236,8 +237,21 @@
   }
 </style>
 <style lang="scss">
-  // @use "@/styles/main.scss" as *;
-  // .example {
-  //   color: $primary-color;
-  // }
+  body {
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    overflow: hidden;
+    background-color: #fff; /* 建议替换为你的应用主体背景色 */
+  }
+
+  .common-layout {
+    border: none;
+    border-radius: 0;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* 你可能需要在这里添加或调整其他全局样式，以确保与你的应用风格一致 */
 </style>
