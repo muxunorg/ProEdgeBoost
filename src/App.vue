@@ -1,5 +1,5 @@
 <template>
-  <div class="common-layout">
+  <div class="common-layout" :class="{ 'dark': isDarkMode }">
     <el-container>
       <el-aside :class="{'is-collapse': isCollapse}">
         <div class="layout-container">
@@ -56,6 +56,7 @@
               <el-button :icon="Headset" />
               <el-button :icon="PictureFilled" />
               <el-button :icon="Setting" />
+              <el-button :icon="isDarkMode ? Sunny : Moon" @click="toggleDarkMode" />
             </el-button-group>
             <el-button-group>
               <el-button :icon="Minus" @click="handleMinimize" />
@@ -98,7 +99,7 @@
   import {
     Document,
     Menu as IconMenu,
-    Setting, Close, FullScreen, Minus, Headset, PictureFilled, UserFilled, Bell, Search
+    Setting, Close, FullScreen, Minus, Headset, PictureFilled, UserFilled, Bell, Search, Moon, Sunny
   } from '@element-plus/icons-vue'
   import { invoke } from "@tauri-apps/api/core";
   import { Window } from '@tauri-apps/api/window';
@@ -106,19 +107,29 @@
   const greetMsg = ref("")
   const name = ref("")
   const input2 = ref("") // 补充定义 input2
+  const isCollapse = ref(localStorage.getItem('sidebarCollapsed') === 'true')
+  const windowWidth = ref(window.innerWidth)
+  const isDarkMode = ref(false) //  添加深色模式状态
 
   async function greet() {
     greetMsg.value = await invoke("greet", { name: name.value });
   }
 
-  const isCollapse = ref(localStorage.getItem('sidebarCollapsed') === 'true')
-  const windowWidth = ref(window.innerWidth)
 
   onMounted(() => {
     window.addEventListener('resize', () => {
       windowWidth.value = window.innerWidth
       if(windowWidth.value < 768) isCollapse.value = true
     })
+    //  初始化深色模式
+    const storedDarkMode = localStorage.getItem('darkMode')
+    if (storedDarkMode) {
+      isDarkMode.value = storedDarkMode === 'true'
+    } else {
+      //  默认跟随系统
+      isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+    updateDarkModeClass() //  应用深色模式类名
   })
 
   const handleCollapse = (state: boolean) => {
@@ -151,6 +162,22 @@
       await win.close();
     } catch (error) {
       console.error("关闭窗口失败:", error);
+    }
+  }
+
+  //  切换深色模式
+  const toggleDarkMode = () => {
+    isDarkMode.value = !isDarkMode.value
+    localStorage.setItem('darkMode', String(isDarkMode.value)) //  存储深色模式状态
+    updateDarkModeClass() //  更新 body 的 class
+  }
+
+  //  更新 body 的 class，应用或移除 'dark' 类
+  const updateDarkModeClass = () => {
+    if (isDarkMode.value) {
+      document.body.classList.add('dark')
+    } else {
+      document.body.classList.remove('dark')
     }
   }
 </script>
@@ -247,6 +274,12 @@
     border-radius: 0;
     overflow: hidden;
     background-color: #fff;
+    color: #000; //  默认文字颜色
+    transition: background-color 0.3s, color 0.3s; //  添加过渡效果
+  }
+  body.dark {
+    background-color: #121212; //  深色背景
+    color: #ffffff; //  深色模式文字颜色
   }
 
   .common-layout {
@@ -255,6 +288,46 @@
     overflow: hidden;
     height: 100vh;
   }
+  .dark .el-header {
+    background-color: #1e1e1e; //  深色 Header 背景
+    color: #ffffff;
+  }
+  .dark .el-aside {
+    background-color: #1e1e1e; //  深色 Aside 背景
+    color: #ffffff;
+  }
+  .dark .el-menu {
+    background-color: #1e1e1e; //  深色 Menu 背景
+    color: #ffffff;
+  }
+  .dark .el-menu-item,
+  .dark .el-menu-item-group__title {
+    color: #ffffff; //  深色 Menu 文字颜色
+  }
+  .dark .el-menu-item:hover,
+  .dark .el-menu-item.is-active {
+    background-color: #2c2c2c !important; //  深色 Menu Hover/Active 背景
+  }
+  .dark .el-main {
+    background-color: #121212; //  深色 Main 背景
+    color: #ffffff;
+  }
+  .dark .el-input,
+  .dark .el-input__inner {
+    background-color: #2c2c2c;
+    color: #ffffff;
+    border-color: #444444;
+  }
+  .dark .el-button {
+    color: #ffffff;
+    background-color: #333;
+    border-color: #555;
+  }
+  .dark .el-button:hover {
+    background-color: #444;
+    border-color: #666;
+  }
+
 
   /* 禁止选择，但保留鼠标默认样式 */
   * {

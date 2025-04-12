@@ -39,6 +39,7 @@
   "pnpm": {
     "ignoredBuiltDependencies": [
       "core-js",
+      "esbuild",
       "vue-demi"
     ]
   }
