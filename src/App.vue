@@ -1,5 +1,5 @@
 <template>
-  <div class="common-layout" :class="{ 'dark': isDarkMode }">
+  <div class="common-layout" :class="{'dark': isDarkMode}">
     <el-container>
       <el-aside :class="{'is-collapse': isCollapse}">
         <div class="layout-container">
@@ -10,34 +10,41 @@
             @mouseenter.native="handleCollapse(false)"
             @mouseleave.native="handleCollapse(true)"
           >
-            <el-menu-item index="1" class="A" disabled>
-              <el-icon><icon-menu /></el-icon>
-              <template #title>慕讯公益加速器</template>
-            </el-menu-item>
-            <el-menu-item index="1" class="A" disabled>
-              <template #title>永久免费 不玩套路</template>
-            </el-menu-item>
-            <el-menu-item index="1" class="A" disabled>
-              <template #title>当前版本</template>
-            </el-menu-item>
-            <el-menu-item index="1" class="A" disabled>
-              <template #title></template>
-            </el-menu-item>
-            <el-menu-item index="1" class="A" disabled>
-              <template #title></template>
-            </el-menu-item>
-            <el-menu-item index="2" class="B">
-              <el-icon><icon-menu /></el-icon>
-              <template #title>我的游戏</template>
-            </el-menu-item>
-            <el-menu-item index="3" class="B">
-              <el-icon><document /></el-icon>
-              <template #title>游戏库</template>
-            </el-menu-item>
-            <el-menu-item index="4" class="B">
-              <el-icon><setting /></el-icon>
-              <template #title>主机加速</template>
-            </el-menu-item>
+            <!-- A类模块 - 固定在顶部 -->
+            <div class="menu-group menu-group-top">
+              <el-menu-item index="about" class="A" disabled>
+                <el-icon><icon-menu /></el-icon>
+                <template #title>慕讯公益加速器</template>
+              </el-menu-item>
+              <el-menu-item index="feature" class="A" disabled>
+                <template #title>永久免费 不玩套路</template>
+              </el-menu-item>
+              <el-menu-item index="version" class="A" disabled>
+                <template #title>当前版本</template>
+              </el-menu-item>
+            </div>
+            
+            <!-- B类模块 - 在剩余空间中居中 -->
+            <div class="menu-group menu-group-middle">
+              <!-- 移除上下spacer元素 -->
+              <el-menu-item index="2" class="B">
+                <el-icon><icon-menu /></el-icon>
+                <template #title>我的游戏</template>
+              </el-menu-item>
+              <el-menu-item index="3" class="B">
+                <el-icon><document /></el-icon>
+                <template #title>游戏库</template>
+              </el-menu-item>
+              <el-menu-item index="4" class="B">
+                <el-icon><setting /></el-icon>
+                <template #title>主机加速</template>
+              </el-menu-item>
+            </div>
+
+            <el-menu-item index="5" class="B">
+                <el-icon><setting /></el-icon>
+                <template #title>自动展开</template>
+              </el-menu-item>
           </el-menu>
         </div>
       </el-aside>
@@ -117,19 +124,25 @@
 
 
   onMounted(() => {
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
       windowWidth.value = window.innerWidth
       if(windowWidth.value < 768) isCollapse.value = true
-    })
-    //  初始化深色模式
+    }
+    window.addEventListener('resize', handleResize)
+    // 初始化深色模式
     const storedDarkMode = localStorage.getItem('darkMode')
     if (storedDarkMode) {
       isDarkMode.value = storedDarkMode === 'true'
     } else {
-      //  默认跟随系统
+      // 默认跟随系统
       isDarkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches
     }
-    updateDarkModeClass() //  应用深色模式类名
+    updateDarkModeClass() // 应用深色模式类名
+
+    // 添加清理函数
+    onUnmounted(() => {
+      window.removeEventListener('resize', handleResize)
+    })
   })
 
   const handleCollapse = (state: boolean) => {
@@ -189,15 +202,27 @@
     overflow: hidden; /* 防止出现滚动条 */
   }
 
-  .el-container {
+  .common-layout > .el-container {
     display: flex; /* 使用 flex 布局使 aside 和主内容并排 */
+    padding-left: 64px; /* 为固定侧边栏预留空间 */
+  }
+
+  /* 移除内层容器的内边距 */
+  .el-container .el-container {
+    padding-left: 0;
   }
 
   .el-aside {
     background-color: #f0f2f5; /* 示例背景色 */
-    flex-shrink: 0; /* 防止侧边栏在空间不足时被压缩 */
-    transition: width 0.3s ease-in-out; /* 添加宽度变化的过渡效果 */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* 优化动画曲线 */
     width: 64px; /* 默认折叠宽度 */
+    position: fixed; /* 改为固定定位 */
+    top: 0; /* 固定到顶部 */
+    left: 0; /* 固定到左侧 */
+    height: 100vh; /* 高度占满视口 */
+    z-index: 100; /* 提高层级确保覆盖主内容 */
+    overflow: hidden; /* 添加：隐藏溢出内容 */
+    will-change: width; /* 添加：提示浏览器优化动画 */
   }
 
   /* 控制侧边栏宽度，根据 isCollapse 类 */
@@ -211,6 +236,30 @@
   .el-menu-vertical-demo {
     border-right: none;
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .menu-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .menu-group-top {
+    /* 固定顶部，不参与剩余空间分配 */
+  }
+  
+  .menu-group-middle {
+    /* 占据剩余空间并使内容居中 */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 垂直居中对齐 */
+  }
+  
+  /* 移除spacer样式 */
+  .spacer {
+    display: none;
   }
 
   .el-menu--collapse {
@@ -267,6 +316,14 @@
   }
 </style>
 <style lang="scss">
+  @use "@/styles/main.scss" as main; // 添加命名空间别名
+
+  // 提取公共样式混合宏
+  @mixin dark-mode-bg($bg-color, $text-color: #ffffff) {
+    background-color: $bg-color;
+    color: $text-color;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -289,45 +346,42 @@
     height: 100vh;
   }
   .dark .el-header {
-    background-color: #1e1e1e; //  深色 Header 背景
+    background-color: main.$dark-header-bg; // 使用命名空间访问变量
     color: #ffffff;
   }
   .dark .el-aside {
-    background-color: #1e1e1e; //  深色 Aside 背景
+    background-color: main.$dark-header-bg;
     color: #ffffff;
   }
   .dark .el-menu {
-    background-color: #1e1e1e; //  深色 Menu 背景
+    background-color: main.$dark-header-bg;
     color: #ffffff;
-  }
-  .dark .el-menu-item,
-  .dark .el-menu-item-group__title {
-    color: #ffffff; //  深色 Menu 文字颜色
   }
   .dark .el-menu-item:hover,
   .dark .el-menu-item.is-active {
-    background-color: #2c2c2c !important; //  深色 Menu Hover/Active 背景
-  }
-  .dark .el-main {
-    background-color: #121212; //  深色 Main 背景
-    color: #ffffff;
+    background-color: main.$dark-menu-active-bg !important;
   }
   .dark .el-input,
   .dark .el-input__inner {
-    background-color: #2c2c2c;
+    background-color: main.$dark-input-bg;
     color: #ffffff;
-    border-color: #444444;
+    border-color: main.$dark-border-color;
+    box-shadow: 0 0 0 1px main.$dark-border-color;
   }
   .dark .el-button {
     color: #ffffff;
-    background-color: #333;
-    border-color: #555;
+    background-color: main.$dark-button-bg;
+    border-color: main.$dark-border-color;
   }
   .dark .el-button:hover {
-    background-color: #444;
-    border-color: #666;
+    background-color: main.$dark-button-hover-bg;
+    border-color: main.$dark-border-color;
   }
 
+  /* 去除搜索框圆角 */
+  .el-header .toolbar .el-input .el-input__inner {
+    border-radius: 0 !important;
+  }
 
   /* 禁止选择，但保留鼠标默认样式 */
   * {
@@ -371,7 +425,9 @@
   .el-aside button,
   .el-aside a,
   .el-aside .el-menu-item,
-  .el-aside .el-input,
+  .el-aside .el-input .el-input__suffix .el-icon {
+    color: #aaaaaa;
+  }
   .el-aside .el-button,
   .el-aside .el-button-group {
     cursor: default;
