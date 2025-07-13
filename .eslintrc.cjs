@@ -1,34 +1,21 @@
 module.exports = {
-    root: true,
-    env: {
-        browser: true,
-        es2021: true,
-        node: true
-    },
-    extends: [
-        'eslint:recommended',
-        'plugin:vue/vue3-recommended',
-        'plugin:@typescript-eslint/recommended',
-        'prettier'
+  rules: {
+    'vue/multi-word-component-names': 'off',
+    '@typescript-eslint/no-unused-vars': 'error',
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          void: 'always',
+          normal: 'never',
+          component: 'always'
+        }
+      }
     ],
-    parser: 'vue-eslint-parser',
-    parserOptions: {
-        parser: '@typescript-eslint/parser',
-        sourceType: 'module',
-        ecmaVersion: 2020
-    },
-    rules: {
-        'vue/multi-word-component-names': 'off',
-        '@typescript-eslint/no-unused-vars': 'error',
-        'vue/html-self-closing': [
-            'error',
-            {
-                html: {
-                    void: 'always',
-                    normal: 'never',
-                    component: 'always'
-                }
-            }
-        ]
-    }
+    'vue/require-prop-types': 'error',
+    'vue/prop-name-casing': ['error', 'camelCase'],
+    'vue/script-setup-uses-vars': 'error',
+    'vue/no-unused-components': 'error',
+    'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: true }],
+  }
 }

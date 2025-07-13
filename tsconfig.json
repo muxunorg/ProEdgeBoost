@@ -27,12 +27,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "types": ["vite/client"],
-
-    /* 类型声明生成 */
-    "declaration": true,
-    "declarationDir": "./types"
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"],
   },
   "include": [
     "src/**/*.ts",

@@ -6,8 +6,8 @@ import IconsResolver from 'unplugin-icons/resolver'
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver} from 'unplugin-vue-components/resolvers'
+import compression from 'vite-plugin-compression';
 
-// @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
 
 export default defineConfig(async () => ({
@@ -37,6 +37,11 @@ export default defineConfig(async () => ({
         }),
         Icons({
             autoInstall: true,
+        }),
+        compression({
+            algorithm: 'gzip',
+            threshold: 10240,
+            ext: '.gz',
         })
     ],
 
@@ -70,11 +75,21 @@ export default defineConfig(async () => ({
     build: {
         target: "esnext",
         chunkSizeWarningLimit: 2000,
+        // 添加以下优化配置
+        cssCodeSplit: true,
+        sourcemap: process.env.NODE_ENV !== 'production',
         rollupOptions: {
             output: {
                 manualChunks: {
-                    tauri: ["@tauri-apps/api"]
-                }
+                    tauri: ["@tauri-apps/api"],
+                    elementPlus: ["element-plus"],
+                    vue: ["vue"],
+                    vueUse: ["@vueuse/core"]
+                },
+                // 添加静态资源优化
+                assetFileNames: 'assets/[name]-[hash][extname]',
+                entryFileNames: 'js/[name]-[hash].js',
+                chunkFileNames: 'js/[name]-[hash].js'
             }
         }
     }
